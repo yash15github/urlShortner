@@ -3,17 +3,22 @@ const shortUrl = require('../models/url')
 
 async function handleNewUrl(req,res) {
     const body = req.body;
-    if(!body ||!body.url){
+    if(!body.longURL){
         return res.status(400).json({error: 'No URL provided'});
     }
     const myid = shortid();
     await shortUrl.create({
         shortId : myid,
-        redirectUrl: body.url,
+        redirectUrl: body.longURL,
         visitHistory: [],
     });
-
-    return res.json({id: myid});
+    return res.render("home", {
+        shortId: myid,
+        originalUrl: body.longURL,
+        shortUrl: `${req.protocol}://${req.get('host')}/${myid}`,
+        message: 'URL created successfully!',
+        success: true,
+    });
 }
 
 module.exports = {
