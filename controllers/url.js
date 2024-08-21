@@ -1,6 +1,7 @@
 const shortid = require ("shortid");
 const shortUrl = require('../models/url')
 
+
 async function handleNewUrl(req,res) {
     const body = req.body;
     if(!body.longURL){
@@ -12,7 +13,9 @@ async function handleNewUrl(req,res) {
         redirectUrl: body.longURL,
         visitHistory: [],
     });
+    const allUrls = await shortUrl.find({});
     return res.render("home", {
+        urls : allUrls,
         shortId: myid,
         originalUrl: body.longURL,
         shortUrl: `${req.protocol}://${req.get('host')}/${myid}`,
